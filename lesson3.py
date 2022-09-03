@@ -32,6 +32,7 @@ else:
 
 # task3
 quiz = "A Simple Math Quiz: 12 + 5 * 10?"
+print(quiz)
 answer = int(input("Please, enter your answer: "))
 
 if answer == 62:
