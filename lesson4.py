@@ -44,7 +44,7 @@ else:
 name = "anna"
 enter_name = input("Enter your name: ")
 
-if enter_name is enter_name.title() or enter_name.capitalize() or enter_name.lower() or enter_name.upper():
+if (name == enter_name.title()) or (name == enter_name.capitalize()) or (name == enter_name.lower()) or (name == enter_name.upper()):
     print("True")
 else:
     print("False")
