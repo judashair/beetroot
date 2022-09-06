@@ -83,12 +83,12 @@ for video_file in video_files:
     year = year[year.find("(")+1:year.find(")")]
     year = int(year)
 
-    if genre == "comedy" and year < 2000 and video_file not in video_to_watch_for_fun:
-        video_to_watch_for_fun.append(video_file)
-    elif year >= 2019 and video_file not in new_video_to_watch:
-        new_video_to_watch.append(video_file)
-    else:
-        maybe_later.append(video_file)
+    if ((genre == "comedy") and (year < 2000)) and video_file not in video_to_watch_for_fun:
+    video_to_watch_for_fun.append(video_file)
+elif ((genre == "comedy") or (genre == "thriller") and (year >= 2019)):
+    new_video_to_watch.append(video_file)
+else:
+    maybe_later.append(video_file)
 
 video_to_watch_for_fun = ",".join(video_to_watch_for_fun)
 new_video_to_watch = ",".join(new_video_to_watch)
