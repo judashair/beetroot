@@ -25,8 +25,8 @@ else:
 # task2
 
 phone_number = str(input("Please, enter your phone number: "))
-if len(phone_number) == 10 and phone_number.isdigit():
-    print("Your phone number is okay")
+if (len(phone_number) == 10) and phone_number.isdigit():
+    print("Your phone number is okay.")
 else:
     print("Please, enter 10 numbers!")
 
