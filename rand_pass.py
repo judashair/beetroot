@@ -8,7 +8,7 @@ characters_set = ""
 
 lowercase_alphabet = "YES"
 if lowercase_alphabet == "YES":
-    password_array = characters_set + lowercase_alphabet
+    characters_set = characters_set + lowercase_alphabet
 
 print("By default password creates from english alphabet in lower case.")
 
@@ -52,8 +52,7 @@ while True:
     if 6 <= password_length <= 32:
         break
     else:
-        print(str(input("You typed wrong number. Enter number between 6 and 32: ")))
-
+        print("You typed wrong number.")
 
 
 password = random.choices(characters_set, k = password_length)
