@@ -4,11 +4,7 @@ lowercase_alphabet = "abcdefghijklmnopqrstuvwxyz"
 uppercase_alphabet = lowercase_alphabet.upper()
 numbers = "0123456789"
 special_characters = "!?#$%^&*()+@-"
-characters_set = ""
-
-lowercase_alphabet = "YES"
-if lowercase_alphabet == "YES":
-    characters_set = characters_set + lowercase_alphabet
+characters_set = "" + lowercase_alphabet
 
 print("By default password creates from english alphabet in lower case.")
 
@@ -18,7 +14,7 @@ while True:
     if answer_u == "NO" or answer_u == "YES":
         break
     else:
-        print(input("You typed wrong answer. Please enter YES or NO: "))
+        print("You typed wrong answer. Please enter YES or NO: ")
 
 if answer_u == "YES":
     characters_set = characters_set + uppercase_alphabet
@@ -28,7 +24,7 @@ while True:
     if answer_n == "NO" or answer_n == "YES":
         break
     else:
-        print(input("You typed wrong answer. Please enter YES or NO: "))
+        print("You typed wrong answer. Please enter YES or NO: ")
 
 if answer_n == "YES":
     characters_set = characters_set + numbers
@@ -38,8 +34,7 @@ while True:
     if answer_s == "YES" or answer_s == "NO":
         break
     else:
-        print(input("You typed wrong answer. Please enter YES or NO: "))
-
+        print("You typed wrong answer. Please enter YES or NO: ")
 if answer_s == "YES":
     characters_set = characters_set + special_characters
 
