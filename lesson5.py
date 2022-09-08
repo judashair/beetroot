@@ -15,7 +15,7 @@ while True:
         print(f"The number is less than {user_number}.")
 
 # task_2
-name = str(input("Enter your name: "))
+name = input("Enter your name: ")
 age = int(input('Enter your age: '))
 greeting = f"Hello {name.title()}, on your next birthday you’ll be {age + 1} years"
 
