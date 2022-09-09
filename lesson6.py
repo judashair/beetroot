@@ -11,7 +11,7 @@ print(max(list_of_numbers))
 # task2
 from random import randint
 
-list1, list2, list3 = [randint(0, 100) for i in range(10)], [randint(0, 100) for i in range(10)], []
+list1, list2, list3 = [randint(0, 10) for i in range(10)], [randint(0, 10) for i in range(10)], []
 i = 0
 print(list1)
 print(list2)
