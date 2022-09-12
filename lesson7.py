@@ -36,6 +36,8 @@ for i in range(1, 10):
     j = i ** 2
     list_of_tuples.append((i, j))
 print(list_of_tuples)
+# or
+print([(i, i ** 2) for i in range(1, 11)])
 
 # task 4
 days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
