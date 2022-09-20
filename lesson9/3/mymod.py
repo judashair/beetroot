@@ -16,3 +16,4 @@ def count_chars(name: str):
 
 def test(name):
 	print(f"There are {count_lines(name)} lines and {count_chars(name)} chars.")
+	
