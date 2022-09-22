@@ -1,3 +1,4 @@
+#task1
 def kwadrat_div():
     a = input('Enter number a: ')
     b = input('Enter number b: ')
@@ -14,6 +15,7 @@ def kwadrat_div():
 
 kwadrat_div()
 
+#task2
 def oops_index_error():
     raise IndexError
 
