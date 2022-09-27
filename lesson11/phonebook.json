@@ -1,0 +1,20 @@
+{
+    "+38095-895-98-98": {
+        "first_name": "Anna",
+        "last_name": "Jkdo",
+        "full_name": "Anna Jkdo",
+        "address": {
+            "state": "ldkfmv",
+            "city": "alck"
+        }
+    },
+    "+380-67-958-96-96": {
+        "first_name": "Tests",
+        "last_name": "Newtest",
+        "full_name": "Tests Newtest",
+        "address": {
+            "state": "Oblast",
+            "city": "Misto"
+        }
+    }
+}
