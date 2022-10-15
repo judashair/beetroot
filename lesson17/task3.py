@@ -27,25 +27,25 @@ class Fraction:
         self.numerator = self.numerator * other.denominator + other.numerator * self.denominator
         self.denominator = self.denominator * other.denominator
         self.reduction(self.numerator, self.denominator)
-        return f'{self.numerator}/{self.denominator}'
+        return f"{self.numerator}/{self.denominator}"
 
     def __sub__(self, other):
         self.numerator = self.numerator * other.denominator - other.numerator * self.denominator
         self.denominator = self.denominator * other.denominator
         self.reduction(self.numerator, self.denominator)
-        return f'{self.numerator}/{self.denominator}'
+        return f"{self.numerator}/{self.denominator}"
 
     def __mul__(self, other):
         self.numerator = self.numerator * other.numerator
         self.denominator = self.denominator * other.denominator
         self.reduction(self.numerator, self.denominator)
-        return f'{self.numerator}/{self.denominator}'
+        return f"{self.numerator}/{self.denominator}"
 
     def __truediv__(self, other):
         self.numerator = self.numerator * other.denominator
         self.denominator = self.denominator * other.numerator
         self.reduction(self.numerator, self.denominator)
-        return f'{self.numerator}/{self.denominator}'
+        return f"{self.numerator}/{self.denominator}"
 
 
 f1 = Fraction(1, 2)
