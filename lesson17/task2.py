@@ -16,8 +16,7 @@ class Author:
         return f"Author {self.first_name} {self.last_name} written {self.books}, {len(self.books)} books!"
 
     def __repr__(self):
-#         return f"{self.first_name} {self.last_name}"
-          return f"Author('{self.first_name}', '{self.last_name}')"
+        return f"{self.first_name} {self.last_name}"
 
 
 class Book:
@@ -30,8 +29,7 @@ class Book:
         self.__class__.books_counter += 1
 
     def __repr__(self):
-        # return f"{self.__name}"
-        return f"Book('{self.author}', '{self.year}', '{self.__name}')"
+        return f"{self.__name}"
 
 
 class Library:
@@ -61,8 +59,7 @@ class Library:
         return f"In the library {self.name} are {len(self.books)} books: {self.books}"
 
     def __repr__(self):
-        # return self.__str__()
-        return f"Library('{self.library}')"
+        return self.__str__()
 
 
 lib1 = Library("Vivat")
