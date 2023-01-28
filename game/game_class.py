@@ -1,33 +1,45 @@
 import pygame
-# from pygame.locals import *
 from pygame import mixer
 import pickle
 from os import path
+from conc import *
 
 
 
-# функція для виводу тексту
+# С„СѓРЅРєС†С–СЏ РґР»СЏ РІРёРІРѕРґСѓ С‚РµРєСЃС‚Сѓ
 def draw_text(text, font, text_col, x, y):
     img = font.render(text, True, text_col)
     screen.blit(img, (x, y))
 
 
-# функція для скидання рівня
+# С„СѓРЅРєС†С–СЏ РґР»СЏ СЃРєРёРґР°РЅРЅСЏ СЂС–РІРЅСЏ
 def reset_level(level):
+    global world_data
     player.reset(65, screen_height - 100)
-    # очищує все
+    # РѕС‡РёС‰СѓС” РІСЃРµ
     blob_group.empty()
     platform_group.empty()
+    star_group.empty()
     lava_group.empty()
     exit_group.empty()
 
-    # завантаження рівнів і створення світу
+    # Р·Р°РІР°РЅС‚Р°Р¶РµРЅРЅСЏ СЂС–РІРЅС–РІ С– СЃС‚РІРѕСЂРµРЅРЅСЏ СЃРІС–С‚Сѓ
     if path.exists(f'level{level}_data'):
         pickle_in = open(f'level{level}_data', 'rb')
         world_data = pickle.load(pickle_in)
-    world = World(world_data)  # відображення світу
+    world = World(world_data)  # РІС–РґРѕР±СЂР°Р¶РµРЅРЅСЏ СЃРІС–С‚Сѓ
+
+    score_star = Star(tile_size // 2, tile_size // 2)
+    star_group.add(score_star)
 
     return world
+
+# def draw_grid():  #  СЂРѕР·РјС–С‚РєР° РґР»СЏ РєСЂР°С‰РѕРіРѕ Р±СѓРґРІР°РЅРЅСЏ Р±Р»РѕРєС–РІ
+#     for line in range(0, 20):
+#         pygame.draw.line(screen, (255, 255, 255), (0, line * tile_size), (screen_width, line * tile_size))
+#         pygame.draw.line(screen, (255, 255, 255), (line * tile_size, 0), (line * tile_size, screen_height))
+# РґР»СЏ РєРЅРѕРїРѕРє СЃС‚Р°СЂС‚Сѓ/СЂРµСЃС‚Р°СЂС‚Сѓ
+
 
 class Button():
     def __init__(self, x, y, image):
@@ -37,16 +49,16 @@ class Button():
         self.rect.y = y
         self.clicked = False
 
-    # показ кнопок ігрових
+    # РїРѕРєР°Р· РєРЅРѕРїРѕРє С–РіСЂРѕРІРёС…
     def draw(self):
         action = False
 
-        # де курсор
+        # РґРµ РєСѓСЂСЃРѕСЂ
         pos = pygame.mouse.get_pos()
 
-        # перевірка чи курсор на кнопці і клікнув
-        if self.rect.collidepoint(pos):  # чи курсор на кнопці
-            if pygame.mouse.get_pressed()[0] == 1 and self.clicked is False:  # якщо клікнуто лівою (0) кнопкою миші
+        # РїРµСЂРµРІС–СЂРєР° С‡Рё РєСѓСЂСЃРѕСЂ РЅР° РєРЅРѕРїС†С– С– РєР»С–РєРЅСѓРІ
+        if self.rect.collidepoint(pos):  # С‡Рё РєСѓСЂСЃРѕСЂ РЅР° РєРЅРѕРїС†С–
+            if pygame.mouse.get_pressed()[0] == 1 and self.clicked is False:  # СЏРєС‰Рѕ РєР»С–РєРЅСѓС‚Рѕ Р»С–РІРѕСЋ (0) РєРЅРѕРїРєРѕСЋ РјРёС€С–
                 action = True
                 self.clicked = True
 
@@ -58,7 +70,7 @@ class Button():
         return action
 
 
-class Player():  # опис персонажа
+class Player():  # РѕРїРёСЃ РїРµСЂСЃРѕРЅР°Р¶Р°
     def __init__(self, x, y):
         self.reset(x, y)
 
@@ -68,8 +80,8 @@ class Player():  # опис персонажа
         walk_cooldown = 8
         col_thresh = 20
 
-        if game_over == 0:  # поки не програв
-            # керування
+        if game_over == 0:  # РїРѕРєРё РЅРµ РїСЂРѕРіСЂР°РІ
+            # РєРµСЂСѓРІР°РЅРЅСЏ
             key = pygame.key.get_pressed()
             if key[pygame.K_SPACE] and self.jumped is False and self.in_air is False:
                 jump_fx.play()
@@ -88,7 +100,7 @@ class Player():  # опис персонажа
             if key[pygame.K_LEFT] is False and key[pygame.K_RIGHT] is False:
                 self.counter = 0
                 self.index = 0
-                if self.direction == 1:  # щоб розвертався в тому напрямку куди нажимається стрілка
+                if self.direction == 1:  # С‰РѕР± СЂРѕР·РІРµСЂС‚Р°РІСЃСЏ РІ С‚РѕРјСѓ РЅР°РїСЂСЏРјРєСѓ РєСѓРґРё РЅР°Р¶РёРјР°С”С‚СЊСЃСЏ СЃС‚СЂС–Р»РєР°
                     self.image = self.images_right[self.index]
                 if self.direction == -1:
                     self.image = self.images_left[self.index]
@@ -104,13 +116,13 @@ class Player():  # опис персонажа
                 if self.direction == -1:
                     self.image = self.images_left[self.index]
 
-            # гравітація
+            # РіСЂР°РІС–С‚Р°С†С–СЏ
             self.vel_y += 1
             if self.vel_y > 10:
                 self.vel_y = 10
             dy += self.vel_y
 
-            # колізія
+            # РєРѕР»С–Р·С–СЏ
             self.in_air = True
             for tile in world.tile_list:
                 # x direction collision
@@ -119,55 +131,55 @@ class Player():  # опис персонажа
 
                 # y direction collision
                 if tile[1].colliderect(self.rect.x, self.rect.y + dy, self.width, self.height):
-                    # перевірка чи над землею - прижок
+                    # РїРµСЂРµРІС–СЂРєР° С‡Рё РЅР°Рґ Р·РµРјР»РµСЋ - РїСЂРёР¶РѕРє
                     if self.vel_y < 0:
                         dy = tile[1].bottom - self.rect.top
                         self.vel_y = 0
-                    # падіння
+                    # РїР°РґС–РЅРЅСЏ
                     elif self.vel_y >= 0:
                         dy = tile[1].top - self.rect.bottom
                         self.vel_y = 0
-                        self.in_air = False  # прижок тільки один раз
+                        self.in_air = False  # РїСЂРёР¶РѕРє С‚С–Р»СЊРєРё РѕРґРёРЅ СЂР°Р·
 
-            # колізія з енемі
-            if pygame.sprite.spritecollide(self, blob_group, False):  # якщо натрапив на ворогів - програш
+            # РєРѕР»С–Р·С–СЏ Р· РµРЅРµРјС–
+            if pygame.sprite.spritecollide(self, blob_group, False):  # СЏРєС‰Рѕ РЅР°С‚СЂР°РїРёРІ РЅР° РІРѕСЂРѕРіС–РІ - РїСЂРѕРіСЂР°С€
                 game_over = -1
                 game_over_fx.play()
 
-            # колізія з лавою
-            if pygame.sprite.spritecollide(self, lava_group, False):  # те саме для лави
+            # РєРѕР»С–Р·С–СЏ Р· Р»Р°РІРѕСЋ
+            if pygame.sprite.spritecollide(self, lava_group, False):  # С‚Рµ СЃР°РјРµ РґР»СЏ Р»Р°РІРё
                 game_over = -1
                 game_over_fx.play()
 
-            if pygame.sprite.spritecollide(self, exit_group, False):  # якщо доходить до виходу - наступний рівень
+            if pygame.sprite.spritecollide(self, exit_group, False):  # СЏРєС‰Рѕ РґРѕС…РѕРґРёС‚СЊ РґРѕ РІРёС…РѕРґСѓ - РЅР°СЃС‚СѓРїРЅРёР№ СЂС–РІРµРЅСЊ
                 game_over = 1
 
-            # колізія з платформою
+            # РєРѕР»С–Р·С–СЏ Р· РїР»Р°С‚С„РѕСЂРјРѕСЋ
             for platform in platform_group:
                 # x direction
                 if platform.rect.colliderect(self.rect.x + dx, self.rect.y, self.width, self.height):
                     dx = 0
                 # y direction
                 if platform.rect.colliderect(self.rect.x, self.rect.y + dy, self.width, self.height):
-                    # чи під платформою
+                    # С‡Рё РїС–Рґ РїР»Р°С‚С„РѕСЂРјРѕСЋ
                     if abs((self.rect.top + dy) - platform.rect.bottom) < col_thresh:
                         self.vel_y = 0
                         dy = platform.rect.bottom - self.rect.top
-                    # чи на платформі
+                    # С‡Рё РЅР° РїР»Р°С‚С„РѕСЂРјС–
                     elif abs((self.rect.bottom + dy) - platform.rect.top) < col_thresh:
                         self.rect.bottom = platform.rect.top - 1
                         self.in_air = False
                         dy = 0
-                    # рух в бік на платформі
+                    # СЂСѓС… РІ Р±С–Рє РЅР° РїР»Р°С‚С„РѕСЂРјС–
                     if platform.move_x != 0:
                         self.rect.x += platform.move_direction
             self.rect.x += dx
             self.rect.y += dy
 
-        elif game_over == -1:  # якщо програш - зображення привида
+        elif game_over == -1:  # СЏРєС‰Рѕ РїСЂРѕРіСЂР°С€ - Р·РѕР±СЂР°Р¶РµРЅРЅСЏ РїСЂРёРІРёРґР°
             self.image = self.dead_image
             self.image = pygame.transform.scale(self.image, (tile_size, tile_size))
-            draw_text('GAME OVER!', font, blue, (screen_width // 2) - 150, screen_height // 5)   # текст при програші
+            draw_text('GAME OVER!', font, blue, (screen_width // 2) - 150, screen_height // 5)   # С‚РµРєСЃС‚ РїСЂРё РїСЂРѕРіСЂР°С€С–
             if self.rect.y > 200:
                 self.rect.y -= 5
 
@@ -182,11 +194,11 @@ class Player():  # опис персонажа
         self.counter = 0
         for num in range(1, 5):
             img_right = pygame.image.load(f'image/gg{num}.png')
-            img_right = pygame.transform.scale(img_right, (32, 60))  # зменшення фото
-            img_left = pygame.transform.flip(img_right, True, False)  # відзеркалює зобр вертикально в даному випадку
+            img_right = pygame.transform.scale(img_right, (32, 60))  # Р·РјРµРЅС€РµРЅРЅСЏ С„РѕС‚Рѕ
+            img_left = pygame.transform.flip(img_right, True, False)  # РІС–РґР·РµСЂРєР°Р»СЋС” Р·РѕР±СЂ РІРµСЂС‚РёРєР°Р»СЊРЅРѕ РІ РґР°РЅРѕРјСѓ РІРёРїР°РґРєСѓ
             self.images_right.append(img_right)
             self.images_left.append(img_left)
-            # опис його положення
+            # РѕРїРёСЃ Р№РѕРіРѕ РїРѕР»РѕР¶РµРЅРЅСЏ
         self.dead_image = pygame.image.load('image/dead.png')
         self.image = self.images_right[self.index]
         self.rect = self.image.get_rect()
@@ -200,7 +212,7 @@ class Player():  # опис персонажа
         self.in_air = True
 
 
-class World():  # опис світу
+class World():  # РѕРїРёСЃ СЃРІС–С‚Сѓ
     def __init__(self, data):
         self.tile_list = []
 
@@ -211,36 +223,36 @@ class World():  # опис світу
         for row in data:
             col_count = 0
             for tile in row:
-                if tile == 1:  # яке зображення брати якщо в матриці стоїть 1
+                if tile == 1:  # СЏРєРµ Р·РѕР±СЂР°Р¶РµРЅРЅСЏ Р±СЂР°С‚Рё СЏРєС‰Рѕ РІ РјР°С‚СЂРёС†С– СЃС‚РѕС—С‚СЊ 1
                     img = pygame.transform.scale(cake_img, (tile_size, tile_size))
                     img_rect = img.get_rect()
                     img_rect.x = col_count * tile_size
                     img_rect.y = row_count * tile_size
                     tile = (img, img_rect)
                     self.tile_list.append(tile)
-                if tile == 2:  # для 2
+                if tile == 2:  # РґР»СЏ 2
                     img = pygame.transform.scale(cream_img, (tile_size, tile_size))
                     img_rect = img.get_rect()
                     img_rect.x = col_count * tile_size
                     img_rect.y = row_count * tile_size
                     tile = (img, img_rect)
                     self.tile_list.append(tile)
-                if tile == 3:  # для 3 - ворог
+                if tile == 3:  # РґР»СЏ 3 - РІРѕСЂРѕРі
                     blob = Enemy(col_count * tile_size, row_count * tile_size + 5)
                     blob_group.add(blob)
-                if tile == 4:   # платформа вправо/вліво
+                if tile == 4:   # РїР»Р°С‚С„РѕСЂРјР° РІРїСЂР°РІРѕ/РІР»С–РІРѕ
                     platform = Platform(col_count * tile_size, row_count * tile_size, 1, 0)
                     platform_group.add(platform)
-                if tile == 5:  # платформа вверх/вниз
+                if tile == 5:  # РїР»Р°С‚С„РѕСЂРјР° РІРІРµСЂС…/РІРЅРёР·
                     platform = Platform(col_count * tile_size, row_count * tile_size, 0, 1)
                     platform_group.add(platform)
-                if tile == 6:  # лава
+                if tile == 6:  # Р»Р°РІР°
                     lava = Lava(col_count * tile_size, row_count * tile_size + (tile_size // 2))
                     lava_group.add(lava)
-                if tile == 7:  # зірки
+                if tile == 7:  # Р·С–СЂРєРё
                     star = Star(col_count * tile_size + (tile_size // 2), row_count * tile_size + (tile_size // 2))
                     star_group.add(star)
-                if tile == 8:  # вихід
+                if tile == 8:  # РІРёС…С–Рґ
                     exit = Exit(col_count * tile_size, row_count * tile_size - (tile_size // 2))
                     exit_group.add(exit)
                 col_count += 1
@@ -251,26 +263,26 @@ class World():  # опис світу
             screen.blit(tile[0], tile[1])
 
 
-class Enemy(pygame.sprite.Sprite):  # опис ворога
+class Enemy(pygame.sprite.Sprite):  # РѕРїРёСЃ РІРѕСЂРѕРіР°
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load('image/enemy.png')
-        self.image = pygame.transform.scale(self.image, (30, 30))  # зменшення зображення
+        self.image = pygame.transform.scale(self.image, (30, 30))  # Р·РјРµРЅС€РµРЅРЅСЏ Р·РѕР±СЂР°Р¶РµРЅРЅСЏ
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-        self.move_direction = 1  # рух
+        self.move_direction = 1  # СЂСѓС…
         self.move_counter = 0
 
     def update(self):
         self.rect.x += self.move_direction
         self.move_counter += 1
-        if self.move_counter > 30:  # щоб не виходили за межі блоків
+        if self.move_counter > 30:  # С‰РѕР± РЅРµ РІРёС…РѕРґРёР»Рё Р·Р° РјРµР¶С– Р±Р»РѕРєС–РІ
             self.move_direction *= -1
             self.move_counter *= -1
 
 
-class Platform(pygame.sprite.Sprite):  # для платформи
+class Platform(pygame.sprite.Sprite):  # РґР»СЏ РїР»Р°С‚С„РѕСЂРјРё
     def __init__(self, x, y, move_x, move_y):
         pygame.sprite.Sprite.__init__(self)
         img = pygame.image.load('image/cake_half.png')
@@ -280,8 +292,8 @@ class Platform(pygame.sprite.Sprite):  # для платформи
         self.rect.y = y
         self.move_counter = 0
         self.move_direction = 1
-        self.move_x = move_x   # рух вправо/вліво
-        self.move_y = move_y  # вверх вниз
+        self.move_x = move_x   # СЂСѓС… РІРїСЂР°РІРѕ/РІР»С–РІРѕ
+        self.move_y = move_y  # РІРІРµСЂС… РІРЅРёР·
 
     def update(self):
         self.rect.x += self.move_direction * self.move_x
@@ -292,32 +304,54 @@ class Platform(pygame.sprite.Sprite):  # для платформи
             self.move_counter *= -1
 
 
-class Lava(pygame.sprite.Sprite):  # для лави
+class Lava(pygame.sprite.Sprite):  # РґР»СЏ Р»Р°РІРё
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
         img = pygame.image.load('image/lava.png')
-        self.image = pygame.transform.scale(img, (tile_size, tile_size // 2))  # зменшення зображення
+        self.image = pygame.transform.scale(img, (tile_size, tile_size // 2))  # Р·РјРµРЅС€РµРЅРЅСЏ Р·РѕР±СЂР°Р¶РµРЅРЅСЏ
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
 
 
-class Star(pygame.sprite.Sprite):   # зірки
+class Star(pygame.sprite.Sprite):   # Р·С–СЂРєРё
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
         img = pygame.image.load('image/star.png')
-        self.image = pygame.transform.scale(img, (tile_size // 1.1, tile_size // 1.1))  # зменшення зображення
+        self.image = pygame.transform.scale(img, (tile_size // 1.1, tile_size // 1.1))  # Р·РјРµРЅС€РµРЅРЅСЏ Р·РѕР±СЂР°Р¶РµРЅРЅСЏ
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
-        score_star = Star(tile_size // 2, tile_size // 2)  # к-ть зірок
-        star_group.add(score_star)
 
 
-class Exit(pygame.sprite.Sprite):  # для переходу на інший рівень
+class Exit(pygame.sprite.Sprite):  # РґР»СЏ РїРµСЂРµС…РѕРґСѓ РЅР° С–РЅС€РёР№ СЂС–РІРµРЅСЊ
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
         img = pygame.image.load('image/door.png')
-        self.image = pygame.transform.scale(img, (tile_size, int(tile_size * 1.5)))  # зменшення зображення
+        self.image = pygame.transform.scale(img, (tile_size, int(tile_size * 1.5)))  # Р·РјРµРЅС€РµРЅРЅСЏ Р·РѕР±СЂР°Р¶РµРЅРЅСЏ
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+
+
+player = Player(65, screen_height - 100)  # РґРµ СЃС‚РѕС—С‚СЊ РїРµСЂСЃРѕРЅРЅР°Р¶ РЅР° РїРѕС‡Р°С‚РєСѓ РіСЂРё
+
+blob_group = pygame.sprite.Group()  # РІС–РґРѕР±СЂР°Р¶РµРЅРЅСЏ РІРѕСЂРѕРіР°
+platform_group = pygame.sprite.Group()  # РІС–РґРѕР±СЂР°Р¶РµРЅРЅСЏ РїР»Р°С‚С„РѕСЂРј
+lava_group = pygame.sprite.Group()  # РІС–РґРѕР±СЂР°Р¶РµРЅРЅСЏ Р»Р°РІРё
+star_group = pygame.sprite.Group()  # РІС–РґРѕР±СЂР°Р¶РµРЅРЅСЏ Р·С–СЂРѕРє
+exit_group = pygame.sprite.Group()  # РїРµСЂРµС…С–Рґ РЅР° С–РЅС€РёР№ СЂС–РІРµРЅСЊ
+
+score_star = Star(tile_size // 2, tile_size // 2)   # Рє-С‚СЊ Р·С–СЂРѕРє
+star_group.add(score_star)
+
+# Р·Р°РІР°РЅС‚Р°Р¶РµРЅРЅСЏ СЂС–РІРЅС–РІ С– СЃС‚РІРѕСЂРµРЅРЅСЏ СЃРІС–С‚Сѓ
+if path.exists(f'level{level}_data'):
+    pickle_in = open(f'level{level}_data', 'rb')
+    world_data = pickle.load(pickle_in)
+
+world = World(world_data)  # РІС–РґРѕР±СЂР°Р¶РµРЅРЅСЏ СЃРІС–С‚Сѓ
+
+# СЃС‚РІРѕСЂРµРЅРЅСЏ РєРЅРѕРїРѕРє
+restart_button = Button(screen_width // 2 - 50, screen_height // 2, restart_img)
+start_button = Button(screen_width // 2 - 200, screen_height // 2, start_img)
+exit_button = Button(screen_width // 2 + 80, screen_height // 1.96, exit_img)
