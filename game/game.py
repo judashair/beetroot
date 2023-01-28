@@ -1,9 +1,7 @@
 import pygame
-# from pygame.locals import *
 from pygame import mixer
 import pickle
 from os import path
-import game_class
 
 pygame.mixer.pre_init(44100, -16, 2, 512)
 mixer.init()  # ініціалізація модуля з музикою
@@ -24,7 +22,7 @@ font_score = pygame.font.SysFont('COURNEUF REGULAR', 30)  # шрифт
 tile_size = 35  # розмір блоків
 game_over = 0
 main_menu = True
-level = 1  # початковий рівень
+level = 0  # початковий рівень
 max_levels = 7  # максимальна к-ть рівнів
 score = 0  # рахунок
 
@@ -60,10 +58,12 @@ def draw_text(text, font, text_col, x, y):
 
 # функція для скидання рівня
 def reset_level(level):
+    global world_data
     player.reset(65, screen_height - 100)
     # очищує все
     blob_group.empty()
     platform_group.empty()
+    star_group.empty()
     lava_group.empty()
     exit_group.empty()
 
@@ -72,6 +72,9 @@ def reset_level(level):
         pickle_in = open(f'level{level}_data', 'rb')
         world_data = pickle.load(pickle_in)
     world = World(world_data)  # відображення світу
+
+    score_star = Star(tile_size // 2, tile_size // 2)
+    star_group.add(score_star)
 
     return world
 
@@ -374,30 +377,6 @@ class Exit(pygame.sprite.Sprite):  # для переходу на інший р�
         self.rect.y = y
 
 
-# мапа світу
-# world_data = [
-#     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-#     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-#     [1, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 1],
-#     [1, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 2, 2, 1],
-#     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 7, 0, 5, 0, 0, 0, 1],
-#     [1, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 1],
-#     [1, 7, 0, 0, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-#     [1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-#     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 7, 0, 0, 0, 0, 1],
-#     [1, 0, 2, 0, 0, 7, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-#     [1, 0, 0, 2, 0, 0, 4, 0, 0, 0, 0, 3, 0, 0, 3, 0, 0, 0, 0, 1],
-#     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 0, 0, 0, 1],
-#     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-#     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 7, 0, 0, 0, 0, 2, 0, 1],
-#     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-#     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 2, 0, 2, 2, 2, 2, 2, 1],
-#     [1, 0, 0, 0, 0, 0, 2, 2, 2, 6, 6, 6, 6, 6, 1, 1, 1, 1, 1, 1],
-#     [1, 0, 0, 0, 0, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-#     [1, 0, 0, 0, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-#     [1, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-# ]
-
 player = Player(65, screen_height - 100)  # де стоїть персоннаж на початку гри
 
 blob_group = pygame.sprite.Group()  # відображення ворога
@@ -413,6 +392,7 @@ star_group.add(score_star)
 if path.exists(f'level{level}_data'):
     pickle_in = open(f'level{level}_data', 'rb')
     world_data = pickle.load(pickle_in)
+
 world = World(world_data)  # відображення світу
 
 # створення кнопок
